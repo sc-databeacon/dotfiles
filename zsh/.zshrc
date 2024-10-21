@@ -1,9 +1,6 @@
-if [ -f "$HOME"/antigen.zsh ]; then
-    # workaround for tmux https://github.com/zsh-users/antigen/issues/543
-    export ANTIGEN_MUTEX=false
-
-    source "$HOME"/antigen.zsh
-    antigen init "$HOME"/.antigenrc
+if [ -f "/usr/share/zsh-antidote/antidote.zsh" ]; then
+    source '/usr/share/zsh-antidote/antidote.zsh'
+    antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 fi
 
 if [[ $(uname) == 'Darwin' ]]; then
@@ -69,9 +66,9 @@ else
     alias cdlr="reset && cd"
 fi
 
-# vscode shortcut
-if command -v code >/dev/null; then
-    alias c="code ."
+# neovim shortcut
+if command -v nvim >/dev/null; then
+    alias n="nvim ."
 fi
 
 # custom  prompt
@@ -103,11 +100,13 @@ export PATH=$PATH:/usr/local/go/bin
 # Docker
 export PATH=$PATH:$HOME/.adocker/bin
 
-# Playdate SDK and binaries
+# Playdate SDK 
 if [[ $(uname) == 'Darwin' ]]; then
     export PLAYDATE_SDK_PATH="$HOME"/Developer/PlaydateSDK
 else
-    export PLAYDATE_SDK_PATH="$HOME"/SDKs/PlaydateSDK-2.5.0
+    #   $ yay -S playdate-sdk
+    #   $ mkdir -p "${XDG_DATA_HOME:-"${HOME}/.local/share"}/playdate-sdk"
+    export PLAYDATE_SDK_PATH="$HOME"/.local/share/playdate-sdk
 fi
 
 export PATH=PLAYDATE_SDK_PATH/bin:$PATH
@@ -116,9 +115,17 @@ export PATH=PLAYDATE_SDK_PATH/bin:$PATH
 export VULKAN_SDK="$HOME/vulkan/1.3.290.0"
 [ -s "$VULKAN_SDK/setup-env.sh" ] && \. "$VULKAN_SDK/setup-env.sh"
 
-
-# local binaries, eg. exericism CLI
+# local binaries
 PATH="$PATH:$HOME/bin:$HOME/.local/bin"
+
+# emscripten SDK
+#   $ yay -S emsdk
+#   $ sudo /usr/lib/emsdk/emsdk install latest
+#   $ sudo /usr/lib/emsdk/emsdk activate latest
+if [ -f "/usr/lib/emsdk/emsdk_env.sh" ]; then
+    export EMSDK_QUIET=1  
+    source "/usr/lib/emsdk/emsdk_env.sh" 
+fi
 
 # Slow but looks nice
 command -v fastfetch >/dev/null 2>&1 && fastfetch
